@@ -620,7 +620,7 @@ function AddInventory() {
                           <div className="add-inventory__current-image">
                             <img
                               src={variant.image_url}
-                              alt={`${variant.color || "Variant"} image`}
+                              alt={`${variant.color || "Variant"}`}
                               style={{
                                 maxWidth: "200px",
                                 maxHeight: "200px",
