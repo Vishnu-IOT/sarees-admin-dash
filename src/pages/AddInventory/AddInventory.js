@@ -45,7 +45,7 @@ const EMPTY_VARIANT = {
 function AddInventory() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { products, categories, subcategories, addProduct, editProduct } = useData();
+  const { products, subcategories, addProduct, editProduct } = useData();
   const isEditMode = Boolean(id);
 
   const [saving, setSaving] = useState(false);
