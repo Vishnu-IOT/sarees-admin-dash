@@ -2,7 +2,11 @@ import axiosClient from "./axiosClient";
 
 // GET https://sarees-backend-9wq0.onrender.com/category/get-category -> { success, data: [...] }
 export const getCategories = () =>
-  axiosClient.get("/category/get-category").then((res) => res.data.data || []);
+  axiosClient.get("/category/get-categories").then((res) => res.data.data || []);
+
+// GET https://sarees-backend-9wq0.onrender.com/category/get-category -> { success, data: [...] }
+export const getCategories = () =>
+  axiosClient.get("/category/get-categories/:collection").then((res) => res.data.data || []);
 
 // POST https://sarees-backend-9wq0.onrender.com/category/create-category
 export const createCategory = (payload) =>
