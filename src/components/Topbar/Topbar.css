@@ -1,0 +1,126 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 28px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 9px 14px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.topbar__search-icon {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.topbar__search-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13.5px;
+  width: 100%;
+  color: var(--color-text-primary);
+}
+
+.topbar__search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.topbar__icon-btn {
+  background: none;
+  border: none;
+  font-size: 17px;
+  color: var(--color-primary);
+  padding: 4px;
+}
+
+.topbar__account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar__account-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.topbar__account-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.topbar__account-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.topbar__account-role {
+  font-size: 10.5px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.topbar__menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--color-primary);
+  padding: 4px 6px 4px 0;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .topbar__menu-btn {
+    display: inline-flex;
+  }
+
+  .topbar__search {
+    max-width: none;
+  }
+
+  .topbar__account-text {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar__search-input {
+    font-size: 12.5px;
+  }
+}

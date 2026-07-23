@@ -1,0 +1,222 @@
+.categories__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.categories__title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.categories__subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.categories__header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.categories__btn {
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.categories__btn--outline {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.categories__btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.categories__loading,
+.categories__empty {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.categories__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.categories__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  gap: 16px;
+}
+
+.categories__card-image {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+.categories__card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.categories__card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.categories__card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.categories__icon-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.categories__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.categories__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.categories__tag-edit,
+.categories__tag-remove {
+  background: none;
+  border: none;
+  font-size: 10px;
+  padding: 0;
+  line-height: 1;
+  color: var(--color-text-muted);
+}
+
+.categories__tag-remove {
+  color: var(--color-danger-text);
+  font-weight: 700;
+}
+
+.categories__add-sub {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-primary);
+  color: var(--color-primary);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.categories__card-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+}
+
+.categories__summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.categories__summary-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.categories__summary-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.categories__summary-value {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+  .categories__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .categories__card {
+    flex-direction: column;
+  }
+  .categories__card-image {
+    width: 100%;
+    height: 60px;
+  }
+  .categories__header-actions {
+    width: 100%;
+  }
+  .categories__btn {
+    flex: 1;
+  }
+  .categories__summary {
+    grid-template-columns: 1fr;
+  }
+}
