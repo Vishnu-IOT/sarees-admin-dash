@@ -14,7 +14,8 @@ function Categories() {
   } = useData();
 
   const handleDeleteCategory = async (category) => {
-    if (!window.confirm(`Delete category "${category.category}"? This can't be undone.`)) return;
+    const name = category.name || category.category;
+    if (!window.confirm(`Delete category "${name}"? This can't be undone.`)) return;
     try {
       await removeCategory(category.id);
     } catch (err) {
@@ -37,7 +38,7 @@ function Categories() {
         <div>
           <h1 className="categories__title">Category Management</h1>
           <p className="categories__subtitle">
-            Create a main category first, then add sub-categories under it.
+            Create a main category first (SAREE or JEWEL collection), then add sub-categories under it.
           </p>
         </div>
         <div className="categories__header-actions">
@@ -70,6 +71,8 @@ function Categories() {
 
       <div className="categories__grid">
         {categories.map((category) => {
+          const name = category.name || category.category;
+          const collection = category.collection || "SAREE";
           const subs = subcategories.filter(
             (s) => String(s.categoryId) === String(category.id)
           );
@@ -78,7 +81,10 @@ function Categories() {
               <div className="categories__card-image">🏷️</div>
               <div className="categories__card-body">
                 <div className="categories__card-top">
-                  <h2 className="categories__card-title">{category.category}</h2>
+                  <div>
+                    <span className="categories__collection-badge">{collection}</span>
+                    <h2 className="categories__card-title">{name}</h2>
+                  </div>
                   <button
                     className="categories__icon-btn"
                     onClick={() => handleDeleteCategory(category)}

@@ -25,6 +25,12 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error(
+      `[API Error] ${error.config?.method?.toUpperCase()} ${error.config?.url} => Status:`,
+      error.response?.status,
+      "Payload:",
+      error.response?.data
+    );
     if (error.response?.status === 401) {
       localStorage.removeItem("authToken");
     }

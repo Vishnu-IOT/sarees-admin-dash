@@ -1,13 +1,17 @@
 import axiosClient from "./axiosClient";
 
-// GET https://sarees-backend-9wq0.onrender.com/orders/get-orders
+// GET /orders/get-orders
 export const getOrders = () =>
   axiosClient.get("/orders/get-orders").then((res) => res.data.orders || res.data.data || res.data);
 
-// POST https://sarees-backend-9wq0.onrender.com/orders/create-orders
-export const createOrder = (payload) =>
-  axiosClient.post("/orders/create-orders", payload).then((res) => res.data);
+// GET /orders/get-order/:orderId
+export const getOrderById = (orderId) =>
+  axiosClient.get(`/orders/get-order/${orderId}`).then((res) => res.data.data || res.data);
 
-// POST https://sarees-backend-9wq0.onrender.com/orders/order-status/:id/status
+// POST /orders/create-order
+export const createOrder = (payload) =>
+  axiosClient.post("/orders/create-order", payload).then((res) => res.data);
+
+// POST /orders/update-order-status/:id
 export const updateOrderStatus = (id, status) =>
-  axiosClient.post(`/orders/order-status/${id}/status`, { status }).then((res) => res.data);
+  axiosClient.post(`/orders/update-order-status/${id}`, { status }).then((res) => res.data);

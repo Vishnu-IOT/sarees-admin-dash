@@ -115,7 +115,7 @@ function Inventory() {
                     <p className="inventory__sku">{product.desc || "—"}</p>
                   </td>
                   <td>
-                    <span className="inventory__tag">{product.category?.category || "Uncategorized"}</span>
+                    <span className="inventory__tag">{product.category?.category||product.category?.name || "Uncategorized"}</span>
                   </td>
                   <td>{product.subcategory?.name || "—"}</td>
                   <td>
@@ -134,7 +134,16 @@ function Inventory() {
                     <div className="inventory__actions">
                       <button
                         className="inventory__icon-btn"
+                        aria-label="View Details"
+                        title="View Details"
+                        onClick={() => navigate(`/inventory/view/${product.id}`)}
+                      >
+                        👁️
+                      </button>
+                      <button
+                        className="inventory__icon-btn"
                         aria-label="Edit"
+                        title="Edit Product"
                         onClick={() => navigate(`/inventory/edit/${product.id}`)}
                       >
                         ✏️
@@ -142,6 +151,7 @@ function Inventory() {
                       <button
                         className="inventory__icon-btn"
                         aria-label="Delete"
+                        title="Delete Product"
                         onClick={() => handleDelete(product)}
                       >
                         🗑️

@@ -1,7 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useData } from "../../context/DataContext";
+import { getCategoriesByCollection } from "../../api/categoriesApi";
 import "./AddInventory.css";
+
+const COLLECTION_OPTIONS = [
+  { value: "SAREE", label: "Saree" },
+  { value: "JEWEL", label: "Jewellery" },
+];
 
 const STATUS_OPTIONS = ["active", "inactive"];
 
@@ -12,6 +18,7 @@ const EMPTY_FORM = {
   price: "",
   discount: "",
   offerPrice: "",
+  collection: "SAREE",
   categoryId: "",
   subcategoryId: "",
   loom: false,
@@ -46,11 +53,35 @@ function AddInventory() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [variants, setVariants] = useState([{ ...EMPTY_VARIANT }]);
   const [expandedVariant, setExpandedVariant] = useState(0);
+  const [collectionCategories, setCollectionCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+
+  // Fetch categories whenever collection changes
+  const fetchCategoriesForCollection = useCallback(async (col) => {
+    if (!col) return;
+    setCategoriesLoading(true);
+    try {
+      const data = await getCategoriesByCollection(col);
+      setCollectionCategories(data);
+    } catch (err) {
+      console.error("Failed to fetch categories for collection:", err);
+      setCollectionCategories([]);
+    } finally {
+      setCategoriesLoading(false);
+    }
+  }, []);
+
+  // Initial load: fetch categories for default collection (SAREE)
+  useEffect(() => {
+    fetchCategoriesForCollection(form.collection || "SAREE");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isEditMode) {
       const existing = products.find((p) => String(p.id) === String(id));
       if (existing) {
+        const existingCollection = existing.collection || "SAREE";
         setForm({
           name: existing.name || "",
           desc: existing.desc || "",
@@ -58,12 +89,15 @@ function AddInventory() {
           price: existing.price || "",
           discount: existing.discount ?? "",
           offerPrice: existing.offerPrice ?? "",
+          collection: existingCollection,
           categoryId: existing.categoryId ?? "",
           subcategoryId: existing.subcategoryId ?? "",
           loom: Boolean(existing.loom),
           isFeatured: Boolean(existing.isFeatured),
           isNewArrival: Boolean(existing.isNewArrival),
         });
+        // Fetch categories for the product's collection
+        fetchCategoriesForCollection(existingCollection);
 
         // Load variants/attributes
         if (existing.attributes && existing.attributes.length > 0) {
@@ -80,8 +114,8 @@ function AddInventory() {
               stone: attr.stone || "",
               weight: attr.weight || "",
               size: attr.size || "",
-              imageFile: null, // Can't pre-load files
-              image_url: attr.image_url || "", // Display existing URL
+              imageFile: null,
+              image_url: attr.image_url || "",
             }))
           );
         }
@@ -104,7 +138,13 @@ function AddInventory() {
       ...prev,
       [name]: type === "checkbox" ? checked : type === "file" ? files[0] : value,
       ...(name === "categoryId" ? { subcategoryId: "" } : {}),
+      // When collection changes, reset category and subcategory
+      ...(name === "collection" ? { categoryId: "", subcategoryId: "" } : {}),
     }));
+    // If collection dropdown changed, re-fetch categories
+    if (name === "collection" && value) {
+      fetchCategoriesForCollection(value);
+    }
   };
 
   const handleVariantChange = (index, fieldName, value) => {
@@ -200,12 +240,13 @@ function AddInventory() {
     setSaving(true);
 
     try {
+      // Use the collection the user explicitly selected in the form
+      const collection = form.collection || "SAREE";
+
       if (isEditMode) {
         const hasNewImages = variants.some((v) => v.imageFile);
 
         if (hasNewImages) {
-          // At least one variant image changed — send as FormData so
-          // files can be uploaded alongside the JSON fields.
           const formData = new FormData();
 
           formData.append("name", form.name);
@@ -216,6 +257,7 @@ function AddInventory() {
           formData.append("offerPrice", form.offerPrice || "");
           formData.append("categoryId", form.categoryId || "");
           formData.append("subcategoryId", form.subcategoryId || "");
+          formData.append("collection", collection);
           formData.append("loom", form.loom);
           formData.append("isFeatured", form.isFeatured);
           formData.append("isNewArrival", form.isNewArrival);
@@ -263,6 +305,7 @@ function AddInventory() {
             offerPrice: form.offerPrice || null,
             categoryId: form.categoryId || null,
             subcategoryId: form.subcategoryId || null,
+            collection,
             loom: form.loom,
             isFeatured: form.isFeatured,
             isNewArrival: form.isNewArrival,
@@ -294,9 +337,10 @@ function AddInventory() {
         formData.append("status", form.status);
         formData.append("price", form.price);
         formData.append("discount", form.discount || 0);
-        formData.append("offerPrice", form.offerPrice || null);
+        formData.append("offerPrice", form.offerPrice || "");
         formData.append("categoryId", form.categoryId);
-        formData.append("subcategoryId", form.subcategoryId || null);
+        formData.append("subcategoryId", form.subcategoryId || "");
+        formData.append("collection", collection);
         formData.append("loom", form.loom);
         formData.append("isFeatured", form.isFeatured);
         formData.append("isNewArrival", form.isNewArrival);
@@ -401,6 +445,22 @@ function AddInventory() {
                   ))}
                 </select>
               </div>
+              <div className="add-inventory__field">
+                <label className="add-inventory__label">Collection *</label>
+                <select
+                  className="add-inventory__input add-inventory__input--collection"
+                  name="collection"
+                  value={form.collection}
+                  onChange={handleChange}
+                  required
+                >
+                  {COLLECTION_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="add-inventory__row">
@@ -412,11 +472,18 @@ function AddInventory() {
                   value={form.categoryId}
                   onChange={handleChange}
                   required
+                  disabled={categoriesLoading}
                 >
-                  <option value="">Select Category</option>
-                  {categories.map((c) => (
+                  <option value="">
+                    {categoriesLoading
+                      ? "Loading categories..."
+                      : collectionCategories.length === 0
+                      ? `No categories for ${form.collection}`
+                      : "Select Category"}
+                  </option>
+                  {collectionCategories.map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.category}
+                      {c.name || c.category}
                     </option>
                   ))}
                 </select>
@@ -428,8 +495,11 @@ function AddInventory() {
                   name="subcategoryId"
                   value={form.subcategoryId}
                   onChange={handleChange}
+                  disabled={!form.categoryId}
                 >
-                  <option value="">Select Sub-category</option>
+                  <option value="">
+                    {!form.categoryId ? "Select a category first" : "Select Sub-category"}
+                  </option>
                   {filteredSubcategories.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.name || s.subcategory}

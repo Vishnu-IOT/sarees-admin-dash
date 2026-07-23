@@ -6,6 +6,7 @@ import Login from "./pages/Login/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Inventory from "./pages/Inventory/Inventory";
 import AddInventory from "./pages/AddInventory/AddInventory";
+import ProductDetail from "./pages/Inventory/ProductDetail";
 import Categories from "./pages/Categories/Categories";
 import AddCategory from "./pages/Categories/AddCategory";
 import AddSubcategory from "./pages/Categories/AddSubcategory";
@@ -32,6 +33,7 @@ function App() {
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/inventory/new" element={<AddInventory />} />
             <Route path="/inventory/edit/:id" element={<AddInventory />} />
+            <Route path="/inventory/view/:id" element={<ProductDetail />} />
           </Route>
 
           <Route element={<Layout searchPlaceholder="Quick search inventory..." userName="Warehouse Manager" />}>

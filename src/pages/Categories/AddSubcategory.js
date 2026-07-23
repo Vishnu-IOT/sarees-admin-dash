@@ -35,7 +35,7 @@ function AddSubcategory() {
     setError("");
     setSaving(true);
     try {
-      const payload = { name: name.trim(), categoryId };
+      const payload = { name: name.trim(), categoryId: Number(categoryId) };
       if (isEditMode) {
         await editSubCategory(id, payload);
       } else {
@@ -99,7 +99,7 @@ function AddSubcategory() {
           <option value="">Select main category</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.category}
+              {c.name || c.category} ({c.collection || "SAREE"})
             </option>
           ))}
         </select>

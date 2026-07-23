@@ -5,16 +5,17 @@ import "./Looms.css";
 
 function Looms() {
   const navigate = useNavigate();
-  const { looms, toggleLoomStatus, removeLoom } = useData();
+  const { looms, loomsLoading, removeLoom } = useData();
 
-  const activeCount = looms.filter((l) => l.status).length;
-  const maintenanceCount = looms.filter((l) =>
-    l.specs?.some((s) => s.toLowerCase().includes("repair"))
-  ).length;
+  const activeCount = looms.filter((l) => l.status === "active").length;
 
-  const handleDelete = (loom) => {
-    if (window.confirm(`Remove loom "${loom.id}" (${loom.model})? This can't be undone.`)) {
-      removeLoom(loom.id);
+  const handleDelete = async (loom) => {
+    if (window.confirm(`Remove handloom product listing "${loom.name}"? This can't be undone.`)) {
+      try {
+        await removeLoom(loom.id);
+      } catch (err) {
+        window.alert("Failed to delete handloom product listing.");
+      }
     }
   };
 
@@ -22,21 +23,21 @@ function Looms() {
     <div className="looms">
       <div className="looms__header">
         <div>
-          <h1 className="looms__title">Loom Management</h1>
-          <p className="looms__subtitle">Monitor and manage industrial weaving units across facility zones.</p>
+          <h1 className="looms__title">Direct-from-Loom Collection</h1>
+          <p className="looms__subtitle">Exquisite handloom sarees & artisan weaver products crafted directly at master looms.</p>
         </div>
-        <button className="looms__btn-primary" onClick={() => navigate("/looms/new")}>
-          + Add Loom
+        <button className="looms__btn-primary" onClick={() => navigate("/inventory/new")}>
+          + Add Loom Product
         </button>
       </div>
 
       <div className="looms__stats">
         <div className="looms__stat-card">
-          <span className="looms__stat-label">Total Looms</span>
-          <span className="looms__stat-value">{looms.length} Units</span>
+          <span className="looms__stat-label">Total Handloom Items</span>
+          <span className="looms__stat-value">{looms.length} Products</span>
         </div>
         <div className="looms__stat-card">
-          <span className="looms__stat-label">Active Looms</span>
+          <span className="looms__stat-label">Active Items</span>
           <span className="looms__stat-value">
             {activeCount}{" "}
             <span className="looms__stat-percent">
@@ -45,79 +46,77 @@ function Looms() {
           </span>
         </div>
         <div className="looms__stat-card">
-          <span className="looms__stat-label">Maintenance Required</span>
-          <span className="looms__stat-value looms__stat-value--danger">
-            {String(maintenanceCount).padStart(2, "0")} Units
-          </span>
-        </div>
-        <div className="looms__stat-card">
-          <span className="looms__stat-label">Active Zone</span>
-          <span className="looms__stat-value looms__stat-value--info">Warehouse B</span>
+          <span className="looms__stat-label">Artisan Weaver Line</span>
+          <span className="looms__stat-value looms__stat-value--info">Handloom Heritage</span>
         </div>
       </div>
 
       <div className="looms__panel">
+        {loomsLoading && <p className="looms__loading" style={{ padding: "20px" }}>Loading loom products...</p>}
+
         <div className="looms__table-scroll">
           <table className="looms__table">
             <thead>
               <tr>
-                <th>Loom ID</th>
-                <th>Model Name</th>
-                <th>Facility Location</th>
-                <th>Technical Specs</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Sub-Category</th>
+                <th>Price</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
+              {!loomsLoading && looms.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: "24px", color: "#888" }}>
+                    No handloom product listings found. Tag products with "Direct from Loom" in Inventory.
+                  </td>
+                </tr>
+              )}
               {looms.map((loom) => (
                 <tr key={loom.id}>
-                  <td className="looms__id">{loom.id}</td>
-                  <td className="looms__model">{loom.model}</td>
-                  <td>{loom.location}</td>
+                  <td className="looms__model">
+                    <strong>{loom.name}</strong>
+                    <div style={{ fontSize: "0.8rem", color: "#666" }}>{loom.desc || "Artisan Handloom"}</div>
+                  </td>
+                  <td>{loom.category?.name || loom.category?.category || "Saree"}</td>
+                  <td>{loom.subcategory?.name || "—"}</td>
                   <td>
-                    <div className="looms__specs">
-                      {(loom.specs || []).map((spec) => (
-                        <span
-                          key={spec}
-                          className={
-                            spec.toLowerCase().includes("repair")
-                              ? "looms__spec looms__spec--warning"
-                              : "looms__spec"
-                          }
-                        >
-                          {spec}
-                        </span>
-                      ))}
-                    </div>
+                    ₹{Number(loom.price || 0).toLocaleString("en-IN")}
+                    {loom.offerPrice && (
+                      <span style={{ fontSize: "0.8rem", color: "#e53e3e", marginLeft: "6px" }}>
+                        ₹{Number(loom.offerPrice).toLocaleString("en-IN")}
+                      </span>
+                    )}
                   </td>
                   <td>
-                    <div className="looms__status-cell">
-                      <button
-                        type="button"
-                        className={`looms__toggle ${loom.status ? "looms__toggle--on" : ""}`}
-                        onClick={() => toggleLoomStatus(loom.id)}
-                        aria-label="Toggle loom status"
-                      >
-                        <span className="looms__toggle-knob" />
-                      </button>
-                      <span className={loom.status ? "looms__status-text--active" : "looms__status-text--inactive"}>
-                        {loom.status ? "Active" : "Inactive"}
-                      </span>
-                    </div>
+                    <span className={loom.status === "active" ? "looms__status-text--active" : "looms__status-text--inactive"}>
+                      {loom.status || "Active"}
+                    </span>
                   </td>
                   <td>
                     <div className="looms__actions">
                       <button
                         className="looms__icon-btn"
+                        aria-label="View Details"
+                        title="View Details"
+                        onClick={() => navigate(`/inventory/view/${loom.id}`)}
+                      >
+                        👁️
+                      </button>
+                      <button
+                        className="looms__icon-btn"
                         aria-label="Edit"
-                        onClick={() => navigate(`/looms/edit/${loom.id}`)}
+                        title="Edit Product"
+                        onClick={() => navigate(`/inventory/edit/${loom.id}`)}
                       >
                         ✏️
                       </button>
                       <button
                         className="looms__icon-btn"
                         aria-label="Delete"
+                        title="Delete Product"
                         onClick={() => handleDelete(loom)}
                       >
                         🗑️
@@ -128,15 +127,6 @@ function Looms() {
               ))}
             </tbody>
           </table>
-        </div>
-
-        <div className="looms__pagination">
-          <span>Showing 1 to {looms.length} of {looms.length} looms</span>
-          <div className="looms__pagination-controls">
-            <button className="looms__page-btn">Previous</button>
-            <button className="looms__page-btn looms__page-btn--active">1</button>
-            <button className="looms__page-btn">Next</button>
-          </div>
         </div>
       </div>
     </div>

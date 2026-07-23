@@ -12,41 +12,66 @@ function AddUser() {
   const { users, addUser, editUser } = useData();
   const isEditMode = Boolean(id);
 
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     name: "",
     email: "",
+    password: "",
+    phoneNo: "",
     role: ROLE_OPTIONS[0],
     status: "Active",
   });
 
   useEffect(() => {
     if (isEditMode) {
-      const existing = users.find((u) => u.id === id);
+      const existing = users.find((u) => String(u.id) === String(id));
       if (existing) {
         setForm({
           name: existing.name || "",
           email: existing.email || "",
+          password: "",
+          phoneNo: existing.phoneNo || "",
           role: existing.role || ROLE_OPTIONS[0],
           status: existing.status || "Active",
         });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, users]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    if (isEditMode) {
-      editUser(id, form);
-    } else {
-      addUser(form);
+    setError("");
+
+    if (!form.name.trim() || !form.email.trim()) {
+      setError("Name and Email are required.");
+      return;
     }
-    navigate("/users");
+
+    if (!isEditMode && !form.password) {
+      setError("Password is required for new user creation.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      if (isEditMode) {
+        await editUser(id, form);
+      } else {
+        await addUser(form);
+      }
+      navigate("/users");
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to save user. Check server logs.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -65,11 +90,18 @@ function AddUser() {
           <button className="add-user__btn add-user__btn--outline" onClick={() => navigate("/users")}>
             Cancel
           </button>
-          <button type="submit" form="add-user-form" className="add-user__btn add-user__btn--primary">
-            {isEditMode ? "Update User" : "Save User"}
+          <button
+            type="submit"
+            form="add-user-form"
+            className="add-user__btn add-user__btn--primary"
+            disabled={saving}
+          >
+            {saving ? "Saving..." : isEditMode ? "Update User" : "Save User"}
           </button>
         </div>
       </div>
+
+      {error && <div className="add-user__error" style={{ color: "#e53e3e", padding: "12px", background: "#fff5f5", borderRadius: "6px", marginBottom: "16px" }}>{error}</div>}
 
       <form id="add-user-form" className="add-user__card" onSubmit={handleSave}>
         <label className="add-user__label">Full Name</label>
@@ -79,6 +111,7 @@ function AddUser() {
           placeholder="e.g. Rajesh Kumar"
           value={form.name}
           onChange={handleChange}
+          required
         />
 
         <label className="add-user__label">Business Email</label>
@@ -89,6 +122,18 @@ function AddUser() {
           placeholder="name@sareejewelry.co"
           value={form.email}
           onChange={handleChange}
+          required
+        />
+
+        <label className="add-user__label">{isEditMode ? "Password (Leave blank to keep unchanged)" : "Password"}</label>
+        <input
+          className="add-user__input"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          value={form.password}
+          onChange={handleChange}
+          required={!isEditMode}
         />
 
         <div className="add-user__row">

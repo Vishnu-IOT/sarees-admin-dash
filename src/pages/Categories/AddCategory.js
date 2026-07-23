@@ -8,6 +8,7 @@ function AddCategory() {
   const { addCategory } = useData();
 
   const [name, setName] = useState("");
+  const [collection, setCollection] = useState("SAREE");
   const [imageName, setImageName] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +27,7 @@ function AddCategory() {
     setError("");
     setSaving(true);
     try {
-      await addCategory({ category: name.trim() });
+      await addCategory({ name: name.trim(), collection });
       navigate("/categories");
     } catch (err) {
       setError(
@@ -80,10 +81,23 @@ function AddCategory() {
           <section className="add-category__card">
             <h2 className="add-category__card-title">Category Metadata</h2>
 
-            <label className="add-category__label">Category Name</label>
+            <label className="add-category__label">Collection</label>
+            <select
+              className="add-category__input"
+              value={collection}
+              onChange={(e) => setCollection(e.target.value)}
+              required
+            >
+              <option value="SAREE">SAREE Collection</option>
+              <option value="JEWEL">JEWEL Collection</option>
+            </select>
+
+            <label className="add-category__label" style={{ marginTop: "16px" }}>
+              Category Name
+            </label>
             <input
               className="add-category__input"
-              placeholder="e.g., Banarasi Sarees"
+              placeholder="e.g., Banarasi Sarees or Diamond Necklaces"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required

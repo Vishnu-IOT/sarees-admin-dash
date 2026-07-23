@@ -3,11 +3,10 @@ import * as categoriesApi from "../api/categoriesApi";
 import * as subcategoriesApi from "../api/subcategoriesApi";
 import * as productsApi from "../api/productsApi";
 import * as ordersApi from "../api/ordersApi";
-import { MOCK_LOOMS, MOCK_USERS } from "../data/mockData";
+import * as loomsApi from "../api/loomsApi";
+import * as usersApi from "../api/usersApi";
 
 const DataContext = createContext(null);
-
-const makeId = (prefix) => `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
 export function DataProvider({ children }) {
   // ---- Live API-backed resources ----
@@ -15,20 +14,23 @@ export function DataProvider({ children }) {
   const [subcategories, setSubcategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [looms, setLooms] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [productsLoading, setProductsLoading] = useState(true);
   const [ordersLoading, setOrdersLoading] = useState(true);
-
-  // ---- No backend endpoint provided for these yet - kept local/mock ----
-  const [looms, setLooms] = useState(MOCK_LOOMS);
-  const [users, setUsers] = useState(MOCK_USERS);
+  const [loomsLoading, setLoomsLoading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(true);
 
   const fetchCategories = useCallback(async () => {
     setCategoriesLoading(true);
     try {
       const data = await categoriesApi.getCategories();
       setCategories(data);
+    } catch (err) {
+      console.error("Categories fetch error:", err);
+      setCategories([]);
     } finally {
       setCategoriesLoading(false);
     }
@@ -38,8 +40,9 @@ export function DataProvider({ children }) {
     try {
       const data = await subcategoriesApi.getSubCategories();
       setSubcategories(data);
-    } catch {
-      // leave whatever we already had
+    } catch (err) {
+      console.error("Subcategories fetch error:", err);
+      setSubcategories([]);
     }
   }, []);
 
@@ -48,6 +51,9 @@ export function DataProvider({ children }) {
     try {
       const data = await productsApi.getProducts();
       setProducts(data.products || []);
+    } catch (err) {
+      console.error("Products fetch error:", err);
+      setProducts([]);
     } finally {
       setProductsLoading(false);
     }
@@ -58,8 +64,35 @@ export function DataProvider({ children }) {
     try {
       const data = await ordersApi.getOrders();
       setOrders(Array.isArray(data) ? data : data.orders || data.data || []);
+    } catch (err) {
+      console.error("Orders fetch error:", err);
+      setOrders([]);
     } finally {
       setOrdersLoading(false);
+    }
+  }, []);
+
+  const fetchLooms = useCallback(async () => {
+    setLoomsLoading(true);
+    try {
+      const data = await loomsApi.getLooms();
+      setLooms(data || []);
+    } catch (err) {
+      console.error("Failed to fetch looms", err);
+    } finally {
+      setLoomsLoading(false);
+    }
+  }, []);
+
+  const fetchUsers = useCallback(async () => {
+    setUsersLoading(true);
+    try {
+      const data = await usersApi.getUsers();
+      setUsers(data || []);
+    } catch (err) {
+      console.error("Failed to fetch users", err);
+    } finally {
+      setUsersLoading(false);
     }
   }, []);
 
@@ -68,9 +101,11 @@ export function DataProvider({ children }) {
     fetchSubcategories();
     fetchProducts();
     fetchOrders();
-  }, [fetchCategories, fetchSubcategories, fetchProducts, fetchOrders]);
+    fetchLooms();
+    fetchUsers();
+  }, [fetchCategories, fetchSubcategories, fetchProducts, fetchOrders, fetchLooms, fetchUsers]);
 
-  // ---------- Categories (create + delete only - no update route on backend) ----------
+  // ---------- Categories ----------
   const addCategory = useCallback(
     async (payload) => {
       const res = await categoriesApi.createCategory(payload);
@@ -121,26 +156,29 @@ export function DataProvider({ children }) {
     async (formData) => {
       const res = await productsApi.createProduct(formData);
       await fetchProducts();
+      await fetchLooms();
       return res;
     },
-    [fetchProducts]
+    [fetchProducts, fetchLooms]
   );
 
   const editProduct = useCallback(
     async (id, payload) => {
       const res = await productsApi.updateProduct(id, payload);
       await fetchProducts();
+      await fetchLooms();
       return res;
     },
-    [fetchProducts]
+    [fetchProducts, fetchLooms]
   );
 
   const removeProduct = useCallback(
     async (id) => {
       await productsApi.deleteProduct(id);
       await fetchProducts();
+      await fetchLooms();
     },
-    [fetchProducts]
+    [fetchProducts, fetchLooms]
   );
 
   // ---------- Orders ----------
@@ -153,39 +191,42 @@ export function DataProvider({ children }) {
     [fetchOrders]
   );
 
-  // ---------- Looms (local only, no backend route yet) ----------
-  const addLoom = useCallback((loom) => {
-    const newLoom = { ...loom, id: loom.id || makeId("LM") };
-    setLooms((prev) => [newLoom, ...prev]);
-    return newLoom;
-  }, []);
+  // ---------- Looms (Handloom Product Listings) ----------
+  const removeLoom = useCallback(
+    async (id) => {
+      await loomsApi.deleteLoom(id);
+      await fetchLooms();
+      await fetchProducts();
+    },
+    [fetchLooms, fetchProducts]
+  );
 
-  const editLoom = useCallback((id, updates) => {
-    setLooms((prev) => prev.map((l) => (l.id === id ? { ...l, ...updates } : l)));
-  }, []);
+  // ---------- Users (Admin Dashboard Users) ----------
+  const addUser = useCallback(
+    async (userData) => {
+      const res = await usersApi.createUser(userData);
+      await fetchUsers();
+      return res;
+    },
+    [fetchUsers]
+  );
 
-  const removeLoom = useCallback((id) => {
-    setLooms((prev) => prev.filter((l) => l.id !== id));
-  }, []);
+  const editUser = useCallback(
+    async (id, updates) => {
+      const res = await usersApi.updateUser(id, updates);
+      await fetchUsers();
+      return res;
+    },
+    [fetchUsers]
+  );
 
-  const toggleLoomStatus = useCallback((id) => {
-    setLooms((prev) => prev.map((l) => (l.id === id ? { ...l, status: !l.status } : l)));
-  }, []);
-
-  // ---------- Users (local only, no backend route yet) ----------
-  const addUser = useCallback((user) => {
-    const newUser = { ...user, id: user.id || makeId("UID") };
-    setUsers((prev) => [newUser, ...prev]);
-    return newUser;
-  }, []);
-
-  const editUser = useCallback((id, updates) => {
-    setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...updates } : u)));
-  }, []);
-
-  const removeUser = useCallback((id) => {
-    setUsers((prev) => prev.filter((u) => u.id !== id));
-  }, []);
+  const removeUser = useCallback(
+    async (id) => {
+      await usersApi.deleteUser(id);
+      await fetchUsers();
+    },
+    [fetchUsers]
+  );
 
   const value = {
     categories,
@@ -211,15 +252,16 @@ export function DataProvider({ children }) {
     fetchOrders,
 
     looms,
-    addLoom,
-    editLoom,
+    loomsLoading,
     removeLoom,
-    toggleLoomStatus,
+    fetchLooms,
 
     users,
+    usersLoading,
     addUser,
     editUser,
     removeUser,
+    fetchUsers,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

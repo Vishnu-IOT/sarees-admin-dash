@@ -264,6 +264,19 @@ select.add-inventory__input:focus {
   box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
 }
 
+/* Collection dropdown — highlighted with accent border */
+select.add-inventory__input--collection {
+  border-color: #7c3aed;
+  background: #faf5ff;
+  font-weight: 600;
+  color: #5b21b6;
+}
+select.add-inventory__input--collection:focus {
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+
 .add-inventory__textarea {
   min-height: 110px;
   resize: vertical;

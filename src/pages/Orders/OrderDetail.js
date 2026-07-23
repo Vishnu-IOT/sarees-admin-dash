@@ -26,15 +26,27 @@ function OrderDetail() {
 
   const order = orders.find((o) => String(o.id) === String(id));
 
+  const normalizeStatus = (str) => {
+    if (!str) return "Pending";
+    const lower = str.trim().toLowerCase();
+    if (lower === "pending") return "Pending";
+    if (lower === "confirmed") return "Confirmed";
+    if (lower === "packed" || lower === "processing") return "Packed";
+    if (lower === "shipped") return "Shipped";
+    if (lower === "delivered") return "Delivered";
+    if (lower === "cancelled" || lower === "canceled") return "Cancelled";
+    return str.trim().charAt(0).toUpperCase() + str.trim().slice(1);
+  };
+
   const handleUpdateStatus = async () => {
     const next = window.prompt(
-      `Enter new status for #ORD-${id} (e.g. pending, processing, shipped, delivered, cancelled):`,
-      order?.status || "processing"
+      `Enter new status for #ORD-${id} (Pending, Confirmed, Packed, Shipped, Delivered, Cancelled):`,
+      order?.status || "Confirmed"
     );
     if (!next) return;
     setUpdating(true);
     try {
-      await changeOrderStatus(id, next.trim());
+      await changeOrderStatus(id, normalizeStatus(next));
     } catch (err) {
       window.alert(err.response?.data?.message || "Couldn't update order status.");
     } finally {
@@ -46,7 +58,7 @@ function OrderDetail() {
     if (!window.confirm(`Cancel order #ORD-${id}?`)) return;
     setUpdating(true);
     try {
-      await changeOrderStatus(id, "cancelled");
+      await changeOrderStatus(id, "Cancelled");
     } catch (err) {
       window.alert(err.response?.data?.message || "Couldn't cancel this order.");
     } finally {
