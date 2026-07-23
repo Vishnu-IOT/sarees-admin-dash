@@ -4,7 +4,7 @@ import axiosClient from "./axiosClient";
 export const getSubCategories = () =>
   axiosClient.get("/category/get-sub-subcategories").then((res) => res.data.data || []);
 
-export const getSubCategories = () =>
+export const getSubCategoriesCollection = () =>
   axiosClient.get(`/category/get-sub-subcategories/${collection}`).then((res) => res.data.data || []);
 
 
