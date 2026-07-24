@@ -168,6 +168,12 @@
   }
 }
 
+@media (max-width: 480px) {
+  .product-detail__card  {
+    width: 280px;
+  }
+}
+
 .product-detail__card {
   background: white;
   border-radius: 8px;
