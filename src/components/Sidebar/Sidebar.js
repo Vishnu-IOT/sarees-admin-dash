@@ -56,7 +56,7 @@ function Sidebar({ isOpen, onClose }) {
             }
           >
             <span className="sidebar__link-icon">⚙️</span>
-            <span className="sidebar__link-label">Settings</span>
+            <span className="sidebar__link-label">Logout</span>
           </NavLink>
 
           <div className="sidebar__account">
