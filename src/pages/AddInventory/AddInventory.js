@@ -204,6 +204,10 @@ function AddInventory() {
       setError("Price is required");
       return;
     }
+    if (!form.offerPrice) {
+      setError("Offer Price is required");
+      return;
+    }
     if (!form.categoryId) {
       setError("Category is required");
       return;
@@ -815,7 +819,7 @@ function AddInventory() {
               className="add-inventory__input"
               name="offerPrice"
               type="number"
-              placeholder="Optional"
+              placeholder="Offer Price"
               step="0.01"
               value={form.offerPrice}
               onChange={handleChange}
