@@ -5,7 +5,7 @@ import AddToLoomModal from "./AddToLoomModal";
 import "./Looms.css";
 
 function Looms() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { looms, loomsLoading, removeLoom } = useData();
   const [showAddModal, setShowAddModal] = useState(false);
 
