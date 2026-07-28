@@ -1,8 +1,10 @@
 import axiosClient from "./axiosClient";
 
-// GET /orders/get-orders
-export const getOrders = () =>
-  axiosClient.get("/orders/get-orders").then((res) => res.data.orders || res.data.data || res.data);
+// GET /orders/get-orders?page=&limit=&status=&search=&sort=
+export const getOrders = (params = {}) =>
+  axiosClient
+    .get("/orders/get-orders", { params })
+    .then((res) => res.data);
 
 // GET /orders/get-order/:orderId
 export const getOrderById = (orderId) =>

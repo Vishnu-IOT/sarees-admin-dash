@@ -24,12 +24,17 @@ const EMPTY_FORM = {
   loom: false,
   isFeatured: false,
   isNewArrival: false,
+  imageFile: null,
+  image_url: "",
 };
 
 const EMPTY_VARIANT = {
   sku: "",
   color: "",
   fabric: "",
+  price: "",
+  discount: "",
+  offerPrice: "",
   work: "",
   blouseLength: "",
   occasion: "",
@@ -95,6 +100,8 @@ function AddInventory() {
           loom: Boolean(existing.loom),
           isFeatured: Boolean(existing.isFeatured),
           isNewArrival: Boolean(existing.isNewArrival),
+          imageFile: null,
+          image_url: existing.image_url || "",
         });
         // Fetch categories for the product's collection
         fetchCategoriesForCollection(existingCollection);
@@ -248,7 +255,7 @@ function AddInventory() {
       const collection = form.collection || "SAREE";
 
       if (isEditMode) {
-        const hasNewImages = variants.some((v) => v.imageFile);
+        const hasNewImages = variants.some((v) => v.imageFile) || form.imageFile;
 
         if (hasNewImages) {
           const formData = new FormData();
@@ -265,6 +272,9 @@ function AddInventory() {
           formData.append("loom", form.loom);
           formData.append("isFeatured", form.isFeatured);
           formData.append("isNewArrival", form.isNewArrival);
+          if (form.imageFile) {
+            formData.append("mainImage", form.imageFile);
+          }
 
           // Send variant data, including whether each one has a new image
           // (so the backend can match uploaded files to the right variant,
@@ -276,6 +286,9 @@ function AddInventory() {
                 sku: v.sku || null,
                 color: v.color || null,
                 fabric: v.fabric || null,
+                price: v.price || 0,
+                offerPrice: v.offerPrice || null,
+                discount: v.discount || null,
                 work: v.work || null,
                 blouseLength: v.blouseLength || null,
                 occasion: v.occasion || null,
@@ -348,6 +361,9 @@ function AddInventory() {
         formData.append("loom", form.loom);
         formData.append("isFeatured", form.isFeatured);
         formData.append("isNewArrival", form.isNewArrival);
+        if (form.imageFile) {
+          formData.append("mainImage", form.imageFile);
+        }
 
         // ✅ Append variants as JSON string
         // hasImage tells the backend whether to expect a file for this
@@ -361,6 +377,9 @@ function AddInventory() {
               sku: v.sku || null,
               color: v.color || null,
               fabric: v.fabric || null,
+              price: v.price || 0,
+              offerPrice: v.offerPrice || null,
+              discount: v.discount || null,
               work: v.work || null,
               blouseLength: v.blouseLength || null,
               occasion: v.occasion || null,
@@ -482,8 +501,8 @@ function AddInventory() {
                     {categoriesLoading
                       ? "Loading categories..."
                       : collectionCategories.length === 0
-                      ? `No categories for ${form.collection}`
-                      : "Select Category"}
+                        ? `No categories for ${form.collection}`
+                        : "Select Category"}
                   </option>
                   {collectionCategories.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -512,6 +531,82 @@ function AddInventory() {
                 </select>
               </div>
             </div>
+
+            {/* MAIN IMAGE — works for both create and edit modes */}
+            <section className="add-inventory__card">
+              <h2 className="add-inventory__card-title">Main Image</h2>
+              {/* Existing image from edit mode — shown only if no new file picked yet */}
+              {isEditMode && form.image_url && !form.imageFile && (
+                <div className="add-inventory__current-image">
+                  <img
+                    src={form.image_url}
+                    alt={`${form.color || "Main"}`}
+                    style={{
+                      maxWidth: "200px",
+                      maxHeight: "200px",
+                      borderRadius: "8px",
+                      marginBottom: "10px",
+                    }}
+                  />
+                  <p className="add-inventory__helper-text">Current image</p>
+                </div>
+              )}
+
+              {/* Preview of newly selected file, in either mode */}
+              {form.imageFile && (
+                <div className="add-inventory__current-image">
+                  <img
+                    src={URL.createObjectURL(form.imageFile)}
+                    alt="New upload preview"
+                    style={{
+                      maxWidth: "200px",
+                      maxHeight: "200px",
+                      borderRadius: "8px",
+                      marginBottom: "10px",
+                    }}
+                  />
+                  <p className="add-inventory__helper-text">
+                    New image selected —{" "}
+                    <button
+                      type="button"
+                      className="add-inventory__link-btn"
+                      onClick={() => setForm(prev => ({
+                        ...prev,
+                        imageFile: null
+                      }))}
+                    >
+                      undo
+                    </button>
+                  </p>
+                </div>
+              )}
+
+              <label className="add-inventory__upload">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setForm(prev => ({
+                    ...prev,
+                    imageFile: e.target.files[0]
+                  }))}
+                  hidden
+                />
+                <span className="add-inventory__upload-icon">📷</span>
+                <span className="add-inventory__upload-text">
+                  {form.imageFile
+                    ? form.imageFile.name
+                    : isEditMode && form.image_url
+                      ? "Replace Main Image"
+                      : "Upload Main Image"}
+                </span>
+              </label>
+              <p className="add-inventory__helper-text">
+                {isEditMode && form.image_url && !form.imageFile
+                  ? "Upload a new image to replace the current one"
+                  : "Upload a unique image for this variant"}
+              </p>
+            </section>
+
           </section>
 
           {/* PRODUCT DESCRIPTION */}
@@ -525,6 +620,64 @@ function AddInventory() {
               value={form.desc}
               onChange={handleChange}
             />
+          </section>
+
+          <section className="add-inventory__card">
+            <h2 className="add-inventory__card-title">Pricing &amp; Flags</h2>
+
+            <div className="add-inventory__row">
+              <div className="add-inventory__field">
+                <label className="add-inventory__label">Price (INR) *</label>
+                <input
+                  className="add-inventory__input"
+                  name="price"
+                  type="number"
+                  placeholder="0.00"
+                  step="0.01"
+                  value={form.price}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="add-inventory__field">
+                <label className="add-inventory__label">Discount (%)</label>
+                <input
+                  className="add-inventory__input"
+                  name="discount"
+                  type="number"
+                  placeholder="0"
+                  step="0.01"
+                  value={form.discount}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <label className="add-inventory__label">Offer Price (INR)</label>
+            <input
+              className="add-inventory__input"
+              name="offerPrice"
+              type="number"
+              placeholder="Offer Price"
+              step="0.01"
+              value={form.offerPrice}
+              onChange={handleChange}
+            />
+
+            <div className="add-inventory__checkbox-group">
+              <label className="add-inventory__checkbox-row">
+                <input type="checkbox" name="loom" checked={form.loom} onChange={handleChange} />
+                Loom-produced item
+              </label>
+              <label className="add-inventory__checkbox-row">
+                <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} />
+                Mark as Featured
+              </label>
+              <label className="add-inventory__checkbox-row">
+                <input type="checkbox" name="isNewArrival" checked={form.isNewArrival} onChange={handleChange} />
+                Mark as New Arrival
+              </label>
+            </div>
           </section>
 
           {/* COLOR VARIANTS */}
@@ -585,6 +738,27 @@ function AddInventory() {
                             placeholder="e.g. Midnight Red, Gold"
                             value={variant.color}
                             onChange={(e) => handleVariantChange(index, "color", e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="add-inventory__row">
+                        <div className="add-inventory__field">
+                          <label className="add-inventory__label">Price *</label>
+                          <input
+                            className="add-inventory__input"
+                            placeholder="e.g. 0.00"
+                            value={variant.price}
+                            onChange={(e) => handleVariantChange(index, "price", e.target.value)}
+                          />
+                        </div>
+                        <div className="add-inventory__field">
+                          <label className="add-inventory__label">OfferPrice *</label>
+                          <input
+                            className="add-inventory__input"
+                            placeholder="e.g. 0.00"
+                            value={variant.offerPrice}
+                            onChange={(e) => handleVariantChange(index, "offerPrice", e.target.value)}
                           />
                         </div>
                       </div>
@@ -777,87 +951,6 @@ function AddInventory() {
             <button type="submit" className="add-inventory__btn add-inventory__btn--primary" disabled={saving}>
               💾 {saving ? "Saving..." : isEditMode ? "Update Product" : "Save Product"}
             </button>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN */}
-        <div className="add-inventory__col">
-          {/* PRICING & FLAGS */}
-          <section className="add-inventory__card">
-            <h2 className="add-inventory__card-title">Pricing &amp; Flags</h2>
-
-            <div className="add-inventory__row">
-              <div className="add-inventory__field">
-                <label className="add-inventory__label">Price (INR) *</label>
-                <input
-                  className="add-inventory__input"
-                  name="price"
-                  type="number"
-                  placeholder="0.00"
-                  step="0.01"
-                  value={form.price}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="add-inventory__field">
-                <label className="add-inventory__label">Discount (%)</label>
-                <input
-                  className="add-inventory__input"
-                  name="discount"
-                  type="number"
-                  placeholder="0"
-                  step="0.01"
-                  value={form.discount}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <label className="add-inventory__label">Offer Price (INR)</label>
-            <input
-              className="add-inventory__input"
-              name="offerPrice"
-              type="number"
-              placeholder="Offer Price"
-              step="0.01"
-              value={form.offerPrice}
-              onChange={handleChange}
-            />
-
-            <div className="add-inventory__checkbox-group">
-              <label className="add-inventory__checkbox-row">
-                <input type="checkbox" name="loom" checked={form.loom} onChange={handleChange} />
-                Loom-produced item
-              </label>
-              <label className="add-inventory__checkbox-row">
-                <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} />
-                Mark as Featured
-              </label>
-              <label className="add-inventory__checkbox-row">
-                <input type="checkbox" name="isNewArrival" checked={form.isNewArrival} onChange={handleChange} />
-                Mark as New Arrival
-              </label>
-            </div>
-          </section>
-
-          {/* NOTICE */}
-          <div className="add-inventory__notice">
-            <span className="add-inventory__notice-icon">ⓘ</span>
-            <div>
-              <strong>Multiple Variants</strong>
-              <p>
-                Each color variant will have its own SKU, attributes, and image. All variants belong to the same
-                product.
-              </p>
-            </div>
-          </div>
-
-          {/* LEGEND */}
-          <div className="add-inventory__legend">
-            <p>
-              <span className="add-inventory__required-indicator">*</span> Required fields
-            </p>
           </div>
         </div>
       </form>

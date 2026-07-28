@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../../context/DataContext";
+import AddToLoomModal from "./AddToLoomModal";
 import "./Looms.css";
 
 function Looms() {
   const navigate = useNavigate();
   const { looms, loomsLoading, removeLoom } = useData();
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const activeCount = looms.filter((l) => l.status === "active").length;
 
-  const handleDelete = async (loom) => {
-    if (window.confirm(`Remove handloom product listing "${loom.name}"? This can't be undone.`)) {
+  // ✅ Untags the product from Loom only — the product itself is kept.
+  // Previously this called delete-product and permanently destroyed it.
+  const handleRemove = async (loom) => {
+    if (window.confirm(`Remove "${loom.name}" from the Direct-from-Loom collection?\n\nThis only un-tags it from Loom — the product itself will NOT be deleted.`)) {
       try {
         await removeLoom(loom.id);
       } catch (err) {
-        window.alert("Failed to delete handloom product listing.");
+        window.alert(err.response?.data?.message || "Failed to remove this product from Loom.");
       }
     }
   };
@@ -26,9 +30,11 @@ function Looms() {
           <h1 className="looms__title">Direct-from-Loom Collection</h1>
           <p className="looms__subtitle">Exquisite handloom sarees & artisan weaver products crafted directly at master looms.</p>
         </div>
-        <button className="looms__btn-primary" onClick={() => navigate("/inventory/new")}>
-          + Add Loom Product
-        </button>
+        <div className="looms__header-actions">
+          <button className="looms__btn-primary" onClick={() => setShowAddModal(true)}>
+            + Add to Loom
+          </button>
+        </div>
       </div>
 
       <div className="looms__stats">
@@ -44,10 +50,6 @@ function Looms() {
               {looms.length ? Math.round((activeCount / looms.length) * 100) : 0}%
             </span>
           </span>
-        </div>
-        <div className="looms__stat-card">
-          <span className="looms__stat-label">Artisan Weaver Line</span>
-          <span className="looms__stat-value looms__stat-value--info">Handloom Heritage</span>
         </div>
       </div>
 
@@ -70,7 +72,7 @@ function Looms() {
               {!loomsLoading && looms.length === 0 && (
                 <tr>
                   <td colSpan={6} style={{ textAlign: "center", padding: "24px", color: "#888" }}>
-                    No handloom product listings found. Tag products with "Direct from Loom" in Inventory.
+                    No handloom product listings found. Click "Add to Loom" to tag an existing product.
                   </td>
                 </tr>
               )}
@@ -97,7 +99,7 @@ function Looms() {
                   </td>
                   <td>
                     <div className="looms__actions">
-                      <button
+                      {/* <button
                         className="looms__icon-btn"
                         aria-label="View Details"
                         title="View Details"
@@ -112,14 +114,14 @@ function Looms() {
                         onClick={() => navigate(`/inventory/edit/${loom.id}`)}
                       >
                         ✏️
-                      </button>
+                      </button> */}
                       <button
-                        className="looms__icon-btn"
-                        aria-label="Delete"
-                        title="Delete Product"
-                        onClick={() => handleDelete(loom)}
+                        className="looms__btn-primary-remove"
+                        aria-label="Remove from Loom"
+                        title="Remove from Loom"
+                        onClick={() => handleRemove(loom)}
                       >
-                        🗑️
+                        Remove from Loom
                       </button>
                     </div>
                   </td>
@@ -129,6 +131,8 @@ function Looms() {
           </table>
         </div>
       </div>
+
+      {showAddModal && <AddToLoomModal onClose={() => setShowAddModal(false)} />}
     </div>
   );
 }

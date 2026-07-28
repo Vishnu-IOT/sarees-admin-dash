@@ -1,16 +1,24 @@
 import axiosClient from "./axiosClient";
 
 // GET /products/get-products
-export const getProducts = () =>
-  axiosClient.get("/products/get-products").then((res) => res.data);
+export const getProducts = (page, limit) =>
+  axiosClient.get(`/products/get-products?page=${page}&limit=${limit}`).then((res) => res.data);
 
 // GET /products/get-sarees
-export const getSarees = () =>
-  axiosClient.get("/products/get-sarees").then((res) => res.data);
+export const getSarees = (page, limit) =>
+  axiosClient.get(`/products/get-sarees?page=${page}&limit=${limit}`).then((res) => res.data);
 
 // GET /products/get-jewels
-export const getJewels = () =>
-  axiosClient.get("/products/get-jewels").then((res) => res.data);
+export const getJewels = (page, limit) =>
+  axiosClient.get(`/products/get-jewels?page=${page}&limit=${limit}`).then((res) => res.data);
+
+// ✅ Single helper the Inventory page uses to switch between
+// All Products / Sarees / Jewels without duplicating fetch logic.
+export const getProductsByCollection = (collection, page = 1, limit = 10) => {
+  if (collection === "SAREE") return getSarees(page, limit);
+  if (collection === "JEWEL") return getJewels(page, limit);
+  return getProducts(page, limit);
+};
 
 // GET /products/get-looms
 export const getLoomProducts = () =>

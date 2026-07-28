@@ -1,17 +1,33 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useData } from "../../context/DataContext";
 import "./AddCategory.css";
 
 function AddCategory() {
   const navigate = useNavigate();
-  const { addCategory } = useData();
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
+
+  const { categories, addCategory, editCategory } = useData();
 
   const [name, setName] = useState("");
   const [collection, setCollection] = useState("SAREE");
   const [imageName, setImageName] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isEditMode) {
+      const existing = categories.find(
+        (category) => String(category.id) === String(id)
+      );
+
+      if (existing) {
+        setName(existing.name || "");
+        setCollection(existing.collection || "SAREE");
+      }
+    }
+  }, [id, categories, isEditMode]);
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -27,12 +43,22 @@ function AddCategory() {
     setError("");
     setSaving(true);
     try {
-      await addCategory({ name: name.trim(), collection });
+      const payload = {
+        name: name.trim(),
+        collection,
+      };
+
+      if (isEditMode) {
+        await editCategory(id, payload);
+      } else {
+        await addCategory(payload);
+      }
+
       navigate("/categories");
     } catch (err) {
       setError(
         err.response?.data?.message ||
-          "Couldn't save this category. Make sure the API server is running."
+        "Couldn't save this category. Make sure the API server is running."
       );
     } finally {
       setSaving(false);
@@ -50,11 +76,15 @@ function AddCategory() {
           Categories
         </button>
         <span> / </span>
-        <span className="add-category__breadcrumb-current">Create New</span>
+        <span className="add-category__breadcrumb-current">
+          {isEditMode ? "Edit Category" : "Create New"}
+        </span>
       </div>
 
       <div className="add-category__header">
-        <h1 className="add-category__title">Create New Category</h1>
+        <h1 className="add-category__title">
+          {isEditMode ? "Edit Category" : "Create New Category"}
+        </h1>
         <div className="add-category__header-actions">
           <button
             type="button"
@@ -69,7 +99,11 @@ function AddCategory() {
             className="add-category__btn add-category__btn--primary"
             disabled={saving}
           >
-            {saving ? "Saving..." : "Save Category"}
+            {saving
+              ? "Saving..."
+              : isEditMode
+                ? "Update Category"
+                : "Save Category"}
           </button>
         </div>
       </div>
@@ -113,7 +147,7 @@ function AddCategory() {
           </div>
         </div>
 
-        <div className="add-category__col">
+        {/* <div className="add-category__col">
           <section className="add-category__card">
             <h2 className="add-category__card-title">Category Visuals</h2>
             <label className="add-category__upload">
@@ -141,7 +175,7 @@ function AddCategory() {
               <span className="add-category__status-pill">DRAFT</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </form>
     </div>
   );

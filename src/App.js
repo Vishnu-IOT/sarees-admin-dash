@@ -13,10 +13,10 @@ import AddSubcategory from "./pages/Categories/AddSubcategory";
 import Orders from "./pages/Orders/Orders";
 import OrderDetail from "./pages/Orders/OrderDetail";
 import Looms from "./pages/Looms/Looms";
-import AddLoom from "./pages/Looms/AddLoom";
 import Users from "./pages/Users/Users";
 import AddUser from "./pages/Users/AddUser";
 import "./App.css";
+import Customers from "./pages/Customers/Customers";
 
 function App() {
   return (
@@ -39,6 +39,7 @@ function App() {
           <Route element={<Layout searchPlaceholder="Quick search inventory..." userName="Warehouse Manager" />}>
             <Route path="/categories" element={<Categories />} />
             <Route path="/categories/new" element={<AddCategory />} />
+            <Route path="/categories/categories/edit/:id" element={<AddCategory />} />
             <Route path="/categories/subcategories/new" element={<AddSubcategory />} />
             <Route path="/categories/subcategories/edit/:id" element={<AddSubcategory />} />
           </Route>
@@ -50,14 +51,16 @@ function App() {
 
           <Route element={<Layout searchPlaceholder="Search looms by ID or location..." userName="Admin Console" />}>
             <Route path="/looms" element={<Looms />} />
-            <Route path="/looms/new" element={<AddLoom />} />
-            <Route path="/looms/edit/:id" element={<AddLoom />} />
           </Route>
 
           <Route element={<Layout searchPlaceholder="Search users or roles..." userName="Admin Panel" />}>
             <Route path="/users" element={<Users />} />
             <Route path="/users/new" element={<AddUser />} />
             <Route path="/users/edit/:id" element={<AddUser />} />
+          </Route>
+
+          <Route element={<Layout searchPlaceholder="Search Customers..." userName="Admin Panel" />}>
+            <Route path="/customers" element={<Customers />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -176,9 +176,44 @@
   color: var(--color-danger-text);
 }
 
-.orders__status--processing {
+.orders__status--processing,
+.orders__status--packed {
   background: var(--color-info-bg);
   color: var(--color-info-text);
+}
+
+.orders__status--confirmed {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.orders__pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.orders__pagination-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.orders__page-btn {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.orders__page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .orders__actions {

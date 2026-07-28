@@ -57,7 +57,13 @@
   color: var(--color-warning-text);
 }
 
+.order-detail__badge--confirmed {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
 .order-detail__badge--processing,
+.order-detail__badge--packed,
 .order-detail__badge--shipped {
   background: var(--color-info-bg);
   color: var(--color-info-text);

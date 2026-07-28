@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: "/orders", label: "Orders", icon: "🧾" },
   { to: "/looms", label: "Looms", icon: "🧵" },
   { to: "/users", label: "Users", icon: "👥" },
+  { to: "/customers", label: "Customers", icon: "🧑🏻‍💼" },
 ];
 
 function Sidebar({ isOpen, onClose }) {

@@ -14,8 +14,8 @@ export const createSubCategory = (payload) =>
 
 // PUT /category/update-subcategory/:id
 export const updateSubCategory = (id, payload) =>
-  axiosClient.put(`/category/update-subcategory/${id}`, payload).then((res) => res.data);
+  axiosClient.post(`/category/update-subcategory/${id}`, payload).then((res) => res.data);
 
 // DELETE /category/delete-subcategory/:id
 export const deleteSubCategory = (id) =>
-  axiosClient.delete(`/category/delete-subcategory/${id}`).then((res) => res.data);
+  axiosClient.get(`/category/delete-subcategory/${id}`).then((res) => res.data);

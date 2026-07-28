@@ -68,69 +68,154 @@ function Categories() {
           No categories yet. Create your first main category to get started.
         </div>
       )}
-
+      {/* Cateory Collection for SAREE */}
+      <h1 className="categories__title" style={{ marginTop: 15 }}>Saree Collection</h1>
       <div className="categories__grid">
-        {categories.map((category) => {
-          const name = category.name || category.category;
-          const collection = category.collection || "SAREE";
-          const subs = subcategories.filter(
-            (s) => String(s.categoryId) === String(category.id)
-          );
-          return (
-            <div className="categories__card" key={category.id}>
-              <div className="categories__card-image">🏷️</div>
-              <div className="categories__card-body">
-                <div className="categories__card-top">
-                  <div>
-                    <span className="categories__collection-badge">{collection}</span>
-                    <h2 className="categories__card-title">{name}</h2>
+        {categories
+          .filter((category) => category.collection === "SAREE")
+          .map((category) => {
+            const name = category.name || category.category;
+            const collection = category.collection || "SAREE";
+            const subs = subcategories.filter(
+              (s) => String(s.categoryId) === String(category.id)
+            );
+            return (
+              <div className="categories__card" key={category.id}>
+                <div className="categories__card-image">🏷️</div>
+                <div className="categories__card-body">
+                  <div className="categories__card-top">
+                    <div>
+                      {/* <span className="categories__collection-badge">{collection}</span> */}
+                      <h2 className="categories__card-title">{name}</h2>
+                    </div>
+                    <button
+                      className="categories__tag-edit"
+                      onClick={() => navigate(`/categories/categories/edit/${category.id}`)}
+                      aria-label="Edit category"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      className="categories__icon-btn"
+                      onClick={() => handleDeleteCategory(category)}
+                      aria-label="Delete category"
+                    >
+                      🗑️
+                    </button>
                   </div>
-                  <button
-                    className="categories__icon-btn"
-                    onClick={() => handleDeleteCategory(category)}
-                    aria-label="Delete category"
-                  >
-                    🗑️
-                  </button>
-                </div>
 
-                <div className="categories__tags">
-                  {subs.map((sub) => (
-                    <span className="categories__tag" key={sub.id}>
-                      {sub.name}
-                      <button
-                        className="categories__tag-edit"
-                        onClick={() => navigate(`/categories/subcategories/edit/${sub.id}`)}
-                        aria-label="Edit sub-category"
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        className="categories__tag-remove"
-                        onClick={() => handleDeleteSubcategory(sub)}
-                        aria-label="Remove sub-category"
-                      >
-                        ✕
-                      </button>
+                  <div className="categories__tags">
+                    {subs.map((sub) => (
+                      <span className="categories__tag" key={sub.id}>
+                        {sub.name}
+                        <button
+                          className="categories__tag-edit"
+                          onClick={() => navigate(`/categories/subcategories/edit/${sub.id}`)}
+                          aria-label="Edit sub-category"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          className="categories__tag-remove"
+                          onClick={() => handleDeleteSubcategory(sub)}
+                          aria-label="Remove sub-category"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    ))}
+                    <button
+                      className="categories__add-sub"
+                      onClick={() => navigate(`/categories/subcategories/new?categoryId=${category.id}`)}
+                    >
+                      + Add Sub
+                    </button>
+                  </div>
+
+                  <div className="categories__card-footer">
+                    <span>
+                      Sub-categories: <strong>{subs.length}</strong>
                     </span>
-                  ))}
-                  <button
-                    className="categories__add-sub"
-                    onClick={() => navigate(`/categories/subcategories/new?categoryId=${category.id}`)}
-                  >
-                    + Add Sub
-                  </button>
-                </div>
-
-                <div className="categories__card-footer">
-                  <span>
-                    Sub-categories: <strong>{subs.length}</strong>
-                  </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+      </div>
+
+      {/* Cateory Collection for JEWEL */}
+      <h1 className="categories__title" style={{ marginTop: 15 }}>Jewellery Collection</h1>
+      <div className="categories__grid">
+        {categories
+          .filter((category) => category.collection === "JEWEL")
+          .map((category) => {
+            const name = category.name || category.category;
+            const collection = category.collection || "SAREE";
+            const subs = subcategories.filter(
+              (s) => String(s.categoryId) === String(category.id)
+            );
+            return (
+              <div className="categories__card" key={category.id}>
+                <div className="categories__card-image">🏷️</div>
+                <div className="categories__card-body">
+                  <div className="categories__card-top">
+                    <div>
+                      {/* <span className="categories__collection-badge">{collection}</span> */}
+                      <h2 className="categories__card-title">{name}</h2>
+                    </div>
+                    <button
+                      className="categories__tag-edit"
+                      onClick={() => navigate(`/categories/categories/edit/${category.id}`)}
+                      aria-label="Edit category"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      className="categories__icon-btn"
+                      onClick={() => handleDeleteCategory(category)}
+                      aria-label="Delete category"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+
+                  <div className="categories__tags">
+                    {subs.map((sub) => (
+                      <span className="categories__tag" key={sub.id}>
+                        {sub.name}
+                        <button
+                          className="categories__tag-edit"
+                          onClick={() => navigate(`/categories/subcategories/edit/${sub.id}`)}
+                          aria-label="Edit sub-category"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          className="categories__tag-remove"
+                          onClick={() => handleDeleteSubcategory(sub)}
+                          aria-label="Remove sub-category"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    ))}
+                    <button
+                      className="categories__add-sub"
+                      onClick={() => navigate(`/categories/subcategories/new?categoryId=${category.id}`)}
+                    >
+                      + Add Sub
+                    </button>
+                  </div>
+
+                  <div className="categories__card-footer">
+                    <span>
+                      Sub-categories: <strong>{subs.length}</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
