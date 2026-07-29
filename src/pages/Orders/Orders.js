@@ -27,7 +27,9 @@ function Orders() {
   const shippedCount = orders.filter((o) => o.status === "Shipped").length;
   // ✅ Real field is grandTotal — `total`/`totalAmount` don't exist on the
   // Order model, so this used to always add up to ₹0.
+  console.log(orders[0].grandTotal);
   const totalRevenue = orders.reduce((sum, o) => sum + Number(o.grandTotal || 0), 0);
+  console.log(totalRevenue);
 
   const applyStatusFilter = (status) => {
     setStatusFilter(status);
@@ -63,7 +65,7 @@ function Orders() {
         <div className="orders__stat-card">
           <span className="orders__stat-label">Revenue (this page, INR)</span>
           <span className="orders__stat-value">
-            ₹{(totalRevenue / 100000).toFixed(1)}L
+            ₹{(totalRevenue / 1000).toFixed(1)}K
           </span>
         </div>
       </div>
