@@ -77,6 +77,15 @@
   color: var(--color-sidebar-text-active);
 }
 
+.sidebar__link--logout {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
 .sidebar__link-icon {
   font-size: 15px;
   width: 18px;

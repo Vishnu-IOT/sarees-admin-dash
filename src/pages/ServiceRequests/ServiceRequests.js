@@ -286,16 +286,13 @@ function ServiceRequests() {
                   <td>{formatDate(request.createdAt)}</td>
                   <td>
                     {request.orderId ? (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigate(`/orders/${request.orderId}`);
-                        }}
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/orders/${request.orderId}`)}
                         className="service-requests__order-link"
                       >
                         #{request.order?.orderNumber || request.orderId}
-                      </a>
+                      </button>
                     ) : (
                       <span className="service-requests__no-order">—</span>
                     )}

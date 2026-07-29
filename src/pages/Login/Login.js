@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../api/authApi";
 import "./Login.css";
@@ -9,6 +9,13 @@ function Login() {
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Already signed in? Skip the login screen.
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,7 +28,7 @@ function Login() {
     setSubmitting(true);
     try {
       const res = await login(form.email, form.password);
-      const token = res.token || res.accessToken || res.data?.token;
+      const token = res.token || res.accessToken || res.data?.token || res.success;
       if (token) {
         localStorage.setItem("authToken", token);
       }

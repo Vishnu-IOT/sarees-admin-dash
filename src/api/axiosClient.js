@@ -33,6 +33,9 @@ axiosClient.interceptors.response.use(
     );
     if (error.response?.status === 401) {
       localStorage.removeItem("authToken");
+      if (window.location.pathname !== "/") {
+        window.location.href = "/";
+      }
     }
     return Promise.reject(error);
   }

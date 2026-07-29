@@ -24,11 +24,7 @@ function ServiceRequestDetail() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchRequest();
-  }, [id]);
-
-  const fetchRequest = async () => {
+  const fetchRequest = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getServiceRequestById(id);
@@ -38,7 +34,11 @@ function ServiceRequestDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchRequest();
+  }, [fetchRequest]);
 
   const handleStatusUpdate = async () => {
     if (!statusFormData.status) return;
@@ -134,7 +134,7 @@ function ServiceRequestDetail() {
                 <span className="detail__value">
                   {request.requestType
                     ? request.requestType.charAt(0).toUpperCase() +
-                      request.requestType.slice(1)
+                    request.requestType.slice(1)
                     : "—"}
                 </span>
               </div>
@@ -143,7 +143,7 @@ function ServiceRequestDetail() {
                 <span className={getStatusBadgeClass(request.status)}>
                   {request.status
                     ? request.status.charAt(0).toUpperCase() +
-                      request.status.slice(1).replace("_", " ")
+                    request.status.slice(1).replace("_", " ")
                     : "Pending"}
                 </span>
               </div>

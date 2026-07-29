@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 const NAV_ITEMS = [
@@ -9,11 +9,18 @@ const NAV_ITEMS = [
   { to: "/orders", label: "Orders", icon: "🧾" },
   { to: "/looms", label: "Looms", icon: "🧵" },
   { to: "/users", label: "Users", icon: "👥" },
-  { to: "/customers", label: "Customers", icon: "🧑🏻‍💼" },
-  { to: "/service-requests", label: "Service Requests", icon: "🎫" },
+  { to: "/customers", label: "Customers", icon: "👥" },
 ];
 
 function Sidebar({ isOpen, onClose }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    onClose?.();
+    navigate("/", { replace: true });
+  };
+
   return (
     <>
       <div
@@ -50,16 +57,10 @@ function Sidebar({ isOpen, onClose }) {
         </nav>
 
         <div className="sidebar__footer">
-          <NavLink
-            to="/settings"
-            onClick={onClose}
-            className={({ isActive }) =>
-              isActive ? "sidebar__link sidebar__link--active" : "sidebar__link"
-            }
-          >
-            <span className="sidebar__link-icon">⚙️</span>
+          <button className="sidebar__link sidebar__link--logout" onClick={handleLogout}>
+            <span className="sidebar__link-icon">🚪</span>
             <span className="sidebar__link-label">Logout</span>
-          </NavLink>
+          </button>
 
           <div className="sidebar__account">
             <div className="sidebar__account-icon">🏬</div>

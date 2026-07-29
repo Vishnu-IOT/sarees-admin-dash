@@ -201,16 +201,6 @@
   font-size: 14px;
 }
 
-.looms__btn-primary-remove {
-  background: #8f0808;
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 10px 18px;
-  font-size: 10px;
-  font-weight: 500;
-}
-
 .looms__pagination {
   display: flex;
   justify-content: space-between;

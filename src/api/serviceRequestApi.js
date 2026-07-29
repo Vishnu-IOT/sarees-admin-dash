@@ -11,7 +11,7 @@ export const getServiceRequests = (params = {}) =>
 // GET service request by ID
 export const getServiceRequestById = (id) =>
   axiosClient
-    .get(`${API_BASE}/reqeust-by-id/${id}`)
+    .get(`${API_BASE}/admin-reqeust-by-id/${id}`)
     .then((res) => res.data.data || res.data);
 
 // GET requests for a specific order

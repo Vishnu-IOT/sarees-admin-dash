@@ -256,6 +256,15 @@
   text-decoration: underline;
 }
 
+.service-requests__order-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  /* keep your existing color/text-decoration/etc. rules below this */
+}
+
 .service-requests__no-order {
   color: var(--color-text-muted);
 }

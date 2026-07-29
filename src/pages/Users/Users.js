@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useData } from "../../context/DataContext";
 import "./Users.css";
 
-const ROLE_DISTRIBUTION_ORDER = ["Admin", "Customer"];
+const ROLE_DISTRIBUTION_ORDER = ["Super Admin", "Inventory Lead", "QC Auditor", "Cataloger", "Staff / Warehouse"];
 
 function statusClass(status) {
   return `users__status users__status--${(status || "Active").toLowerCase()}`;
@@ -88,46 +88,44 @@ function Users() {
                     </td>
                   </tr>
                 )}
-                {users
-                  .filter((user) => user.role === "Admin")
-                  .map((user) => (
-                    <tr key={user.id}>
-                      <td>
-                        <div className="users__name-cell">
-                          <span className="users__avatar">{(user.name || "U").charAt(0).toUpperCase()}</span>
-                          <div>
-                            <p className="users__name">{user.name}</p>
-                            <p className="users__uid">ID: #{user.id}</p>
-                          </div>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>
+                      <div className="users__name-cell">
+                        <span className="users__avatar">{(user.name || "U").charAt(0).toUpperCase()}</span>
+                        <div>
+                          <p className="users__name">{user.name}</p>
+                          <p className="users__uid">ID: #{user.id}</p>
                         </div>
-                      </td>
-                      <td>
-                        <span className={roleClass(user.role)}>{user.role || "Admin"}</span>
-                      </td>
-                      <td className="users__email">{user.email}</td>
-                      <td>
-                        <span className={statusClass(user.status)}>
-                          <span className="users__status-dot" /> {user.status || "Active"}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="users__row-actions">
-                          <button
-                            className="users__edit-btn"
-                            onClick={() => navigate(`/users/edit/${user.id}`)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="users__delete-btn"
-                            onClick={() => handleDelete(user)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                      </div>
+                    </td>
+                    <td>
+                      <span className={roleClass(user.role)}>{user.role || "Admin"}</span>
+                    </td>
+                    <td className="users__email">{user.email}</td>
+                    <td>
+                      <span className={statusClass(user.status)}>
+                        <span className="users__status-dot" /> {user.status || "Active"}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="users__row-actions">
+                        <button
+                          className="users__edit-btn"
+                          onClick={() => navigate(`/users/edit/${user.id}`)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="users__delete-btn"
+                          onClick={() => handleDelete(user)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
