@@ -22,7 +22,14 @@ import "./App.css";
 import Customers from "./pages/Customers/Customers";
 
 function App() {
-  const admin_data = JSON.parse(localStorage.getItem("admin_data"));
+  
+  let admin_data = {};
+  try {
+    admin_data = JSON.parse(localStorage.getItem("admin_data")) || {};
+  } catch (e) {
+    admin_data = {};
+  }
+
   return (
     <DataProvider>
       <BrowserRouter>
