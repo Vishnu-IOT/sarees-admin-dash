@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useData } from "../../context/DataContext";
 import AddToLoomModal from "./AddToLoomModal";
 import "./Looms.css";
 
 function Looms() {
-  const navigate = useNavigate();
   const { looms, loomsLoading, removeLoom } = useData();
   const [showAddModal, setShowAddModal] = useState(false);
 

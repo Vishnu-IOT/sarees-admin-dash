@@ -75,7 +75,6 @@ function Categories() {
           .filter((category) => category.collection === "SAREE")
           .map((category) => {
             const name = category.name || category.category;
-            const collection = category.collection || "SAREE";
             const subs = subcategories.filter(
               (s) => String(s.categoryId) === String(category.id)
             );
@@ -150,7 +149,6 @@ function Categories() {
           .filter((category) => category.collection === "JEWEL")
           .map((category) => {
             const name = category.name || category.category;
-            const collection = category.collection || "SAREE";
             const subs = subcategories.filter(
               (s) => String(s.categoryId) === String(category.id)
             );

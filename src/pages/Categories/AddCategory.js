@@ -12,7 +12,6 @@ function AddCategory() {
 
   const [name, setName] = useState("");
   const [collection, setCollection] = useState("SAREE");
-  const [imageName, setImageName] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -28,11 +27,6 @@ function AddCategory() {
       }
     }
   }, [id, categories, isEditMode]);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    setImageName(file ? file.name : "");
-  };
 
   const handleSave = async (e) => {
     e.preventDefault();

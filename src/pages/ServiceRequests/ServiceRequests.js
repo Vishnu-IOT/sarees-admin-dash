@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Dialog from "../../components/Dialog/Dialog";
 import {
@@ -37,13 +37,10 @@ function ServiceRequests() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchRequests(1);
-  }, [statusFilter, typeFilter, priorityFilter]);
-
-  const fetchRequests = async (page = 1) => {
+  const fetchRequests = useCallback(async (page = 1) => {
     try {
       setLoading(true);
+
       const response = await getServiceRequests({
         page,
         limit: 10,
@@ -58,12 +55,16 @@ function ServiceRequests() {
         total: response.total || 0,
       });
     } catch (error) {
-      console.error("Error fetching requests:", error);
+      console.error(error);
       setRequests([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, typeFilter]);
+
+  useEffect(() => {
+    fetchRequests(1);
+  }, [fetchRequests]);
 
   const handleStatusUpdate = async () => {
     if (!statusDialog || !statusFormData.status) {
@@ -258,7 +259,7 @@ function ServiceRequests() {
                     <span className="service-requests__type">
                       {request.requestType
                         ? request.requestType.charAt(0).toUpperCase() +
-                          request.requestType.slice(1)
+                        request.requestType.slice(1)
                         : "—"}
                     </span>
                   </td>
@@ -266,7 +267,7 @@ function ServiceRequests() {
                     <span className={getStatusClass(request.status)}>
                       {request.status
                         ? request.status.charAt(0).toUpperCase() +
-                          request.status.slice(1).replace("_", " ")
+                        request.status.slice(1).replace("_", " ")
                         : "Pending"}
                     </span>
                   </td>
