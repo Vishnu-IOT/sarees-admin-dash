@@ -7,10 +7,10 @@ const NAV_ITEMS = [
   { to: "/inventory", label: "Inventory", icon: "📦" },
   { to: "/categories", label: "Categories", icon: "🏷️" },
   { to: "/orders", label: "Orders", icon: "🧾" },
+  { to: "/service-requests", label: "Service Requests", icon: "🎫" }, // ✅ NEW
   { to: "/looms", label: "Looms", icon: "🧵" },
   { to: "/users", label: "Users", icon: "👥" },
   { to: "/customers", label: "Customers", icon: "🧑🏻‍💼" },
-  { to: "/service-requests", label: "Service Requests", icon: "🎫" },
 ];
 
 function Sidebar({ isOpen, onClose }) {

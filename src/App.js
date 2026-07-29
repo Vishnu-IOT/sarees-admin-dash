@@ -15,6 +15,8 @@ import OrderDetail from "./pages/Orders/OrderDetail";
 import Looms from "./pages/Looms/Looms";
 import Users from "./pages/Users/Users";
 import AddUser from "./pages/Users/AddUser";
+import ServiceRequests from "./pages/ServiceRequests/ServiceRequests"; // ✅ NEW
+import ServiceRequestDetail from "./pages/ServiceRequests/ServiceRequestDetail"; // ✅ NEW
 import "./App.css";
 import Customers from "./pages/Customers/Customers";
 
@@ -63,10 +65,16 @@ function App() {
             <Route path="/customers" element={<Customers />} />
           </Route>
 
+          <Route element={<Layout searchPlaceholder="Search Service Request..." userName="Admin Panel" />}>
+            <Route path="/service-requests" element={<ServiceRequests />} />
+            <Route path="/service-requests/:id" element={<ServiceRequestDetail />} />
+          </Route>
+
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
-    </DataProvider>
+    </DataProvider >
   );
 }
 
