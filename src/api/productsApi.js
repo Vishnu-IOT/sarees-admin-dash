@@ -14,7 +14,7 @@ export const getJewels = (page, limit) =>
 
 // ✅ Single helper the Inventory page uses to switch between
 // All Products / Sarees / Jewels without duplicating fetch logic.
-export const getProductsByCollection = (collection, page = 1, limit = 8) => {
+export const getProductsByCollection = (collection, page = 1, limit = 10) => {
   if (collection === "SAREE") return getSarees(page, limit);
   if (collection === "JEWEL") return getJewels(page, limit);
   return getProducts(page, limit);

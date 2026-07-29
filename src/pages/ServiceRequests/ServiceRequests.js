@@ -341,14 +341,14 @@ function ServiceRequests() {
                 disabled={meta.currentPage === 1}
                 onClick={() => handlePageChange(meta.currentPage - 1)}
               >
-                Previous
+                🠔
               </button>
               <button
                 className="service-requests__page-btn"
                 disabled={meta.currentPage === meta.totalPages}
                 onClick={() => handlePageChange(meta.currentPage + 1)}
               >
-                Next
+                ➝
               </button>
             </div>
           </div>

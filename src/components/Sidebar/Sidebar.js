@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: "/looms", label: "Looms", icon: "🧵" },
   { to: "/users", label: "Users", icon: "👥" },
   { to: "/customers", label: "Customers", icon: "👥" },
+  { to: "/service-requests", label: "Service Requests", icon: "🎫" },
 ];
 
 function Sidebar({ isOpen, onClose }) {
@@ -17,6 +18,7 @@ function Sidebar({ isOpen, onClose }) {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("admin_data");
     onClose?.();
     navigate("/", { replace: true });
   };

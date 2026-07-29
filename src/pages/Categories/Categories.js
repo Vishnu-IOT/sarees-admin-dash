@@ -161,20 +161,22 @@ function Categories() {
                       {/* <span className="categories__collection-badge">{collection}</span> */}
                       <h2 className="categories__card-title">{name}</h2>
                     </div>
-                    <button
-                      className="categories__tag-edit"
-                      onClick={() => navigate(`/categories/categories/edit/${category.id}`)}
-                      aria-label="Edit category"
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      className="categories__icon-btn"
-                      onClick={() => handleDeleteCategory(category)}
-                      aria-label="Delete category"
-                    >
-                      🗑️
-                    </button>
+                    <div className="categories__card-actions">
+                      <button
+                        className="categories__tag-edit"
+                        onClick={() => navigate(`/categories/categories/edit/${category.id}`)}
+                        aria-label="Edit category"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        className="categories__icon-btn"
+                        onClick={() => handleDeleteCategory(category)}
+                        aria-label="Delete category"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </div>
 
                   <div className="categories__tags">

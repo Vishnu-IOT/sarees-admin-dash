@@ -161,14 +161,14 @@ function Orders() {
                 disabled={ordersMeta.currentPage === 1}
                 onClick={() => goToPage(ordersMeta.currentPage - 1)}
               >
-                Previous
+                🠔
               </button>
               <button
                 className="orders__page-btn"
                 disabled={ordersMeta.currentPage === ordersMeta.totalPages}
                 onClick={() => goToPage(ordersMeta.currentPage + 1)}
               >
-                Next
+                ➝
               </button>
             </div>
           </div>

@@ -55,7 +55,7 @@ export function DataProvider({ children }) {
 
   // ✅ Now collection-aware: "ALL" | "SAREE" | "JEWEL"
   // Powers the Products / Jewel Products / Saree Products tabs in Inventory.
-  const fetchProducts = useCallback(async (page = 1, limit = 8, collection = "ALL") => {
+  const fetchProducts = useCallback(async (page = 1, limit = 10, collection = "ALL") => {
     setProductsLoading(true);
     setProductsCollection(collection);
     try {

@@ -23,9 +23,9 @@ function Topbar({
       </div>
 
       <div className="topbar__actions">
-        <button className="topbar__icon-btn" type="button" aria-label="Notifications">
+        {/* <button className="topbar__icon-btn" type="button" aria-label="Notifications">
           🔔
-        </button>
+        </button> */}
         <div className="topbar__account">
           <span className="topbar__account-icon">👤</span>
           <div className="topbar__account-text">

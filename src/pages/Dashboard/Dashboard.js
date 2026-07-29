@@ -12,7 +12,7 @@ function Dashboard() {
   const { products, orders, looms, users, categories } = useData();
 
   const activeLooms = looms.filter((l) => l.status).length;
-  const recentProducts = products.slice(0, 4);
+  const recentProducts = products.slice(0, 5);
   const trendingProduct = products[0];
   const categoryTotals = categories.map((cat) => ({
     label: cat.category,
@@ -27,9 +27,9 @@ function Dashboard() {
           <p className="dashboard__subtitle">Real-time status of products and warehouse activity.</p>
         </div>
         <div className="dashboard__header-actions">
-          <button className="dashboard__btn dashboard__btn--outline">Export Data</button>
+          {/* <button className="dashboard__btn dashboard__btn--outline">Export Data</button> */}
           <button className="dashboard__btn dashboard__btn--primary" onClick={() => navigate("/inventory/new")}>
-            + Add New Entry
+            + Add New Products
           </button>
         </div>
       </div>
@@ -76,7 +76,7 @@ function Dashboard() {
             <span className="dashboard__stat-label">System Users</span>
             <span className="dashboard__stat-icon">👥</span>
           </div>
-          <div className="dashboard__stat-value">{users.length}</div>
+          <div className="dashboard__stat-value">{users.filter((user) => user.role === "Admin").length}</div>
           <div className="dashboard__stat-note">Admin access only</div>
         </div>
       </div>
@@ -109,7 +109,7 @@ function Dashboard() {
               {recentProducts.map((product) => (
                 <tr key={product.id}>
                   <td className="dashboard__sku">{product.name}</td>
-                  <td>{product.category?.category || "—"}</td>
+                  <td>{product.category?.name || "—"}</td>
                   <td>₹{Number(product.price || 0).toLocaleString("en-IN")}</td>
                   <td>
                     <span className={statusClass(product.status)}>{product.status}</span>

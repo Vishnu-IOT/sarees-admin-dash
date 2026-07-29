@@ -195,6 +195,16 @@
   font-size: 12.5px;
 }
 
+.looms__btn-primary-remove {
+  background: red;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
 .looms__icon-btn {
   background: none;
   border: none;

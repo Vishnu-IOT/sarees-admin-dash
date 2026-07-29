@@ -16,10 +16,13 @@ import OrderDetail from "./pages/Orders/OrderDetail";
 import Looms from "./pages/Looms/Looms";
 import Users from "./pages/Users/Users";
 import AddUser from "./pages/Users/AddUser";
+import ServiceRequests from "./pages/ServiceRequests/ServiceRequests";
+import ServiceRequestDetail from "./pages/ServiceRequests/ServiceRequestDetail";
 import "./App.css";
 import Customers from "./pages/Customers/Customers";
 
 function App() {
+  const admin_data = JSON.parse(localStorage.getItem("admin_data"));
   return (
     <DataProvider>
       <BrowserRouter>
@@ -29,7 +32,7 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <Layout searchPlaceholder="Search orders, SKU, or users..." userName="Warehouse Admin" />
+                <Layout searchPlaceholder="Search orders, SKU, or users..." userName={admin_data.name || "Admin"} userRole="Administrator" />
               </ProtectedRoute>
             }
           >
@@ -41,7 +44,7 @@ function App() {
               <ProtectedRoute>
                 <Layout
                   searchPlaceholder="Search inventory, SKUs, or categories..."
-                  userName="Admin Console"
+                  userName={admin_data.name || "Admin"}
                   userRole="Administrator"
                 />
               </ProtectedRoute>
@@ -56,7 +59,7 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <Layout searchPlaceholder="Quick search inventory..." userName="Warehouse Manager" />
+                <Layout searchPlaceholder="Quick search inventory..." userName={admin_data.name || "Admin"} userRole="Administrator" />
               </ProtectedRoute>
             }
           >
@@ -70,7 +73,7 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <Layout searchPlaceholder="Search orders, IDs, or products..." userName="Admin Console" />
+                <Layout searchPlaceholder="Search orders, IDs, or products..." userName={admin_data.name || "Admin"} userRole="Administrator" />
               </ProtectedRoute>
             }
           >
@@ -81,7 +84,7 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <Layout searchPlaceholder="Search looms by ID or location..." userName="Admin Console" />
+                <Layout searchPlaceholder="Search looms by ID or location..." userName={admin_data.name || "Admin"} userRole="Administrator" />
               </ProtectedRoute>
             }
           >
@@ -91,7 +94,7 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <Layout searchPlaceholder="Search users or roles..." userName="Admin Panel" />
+                <Layout searchPlaceholder="Search users or roles..." userName={admin_data.name || "Admin"} userRole="Administrator" />
               </ProtectedRoute>
             }
           >
@@ -103,11 +106,22 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <Layout searchPlaceholder="Search Customers..." userName="Admin Panel" />
+                <Layout searchPlaceholder="Search Customers..." userName={admin_data.name || "Admin"} userRole="Administrator" />
               </ProtectedRoute>
             }
           >
             <Route path="/customers" element={<Customers />} />
+          </Route>
+
+          <Route
+            element={
+              <ProtectedRoute>
+                <Layout searchPlaceholder="Search Service Request..." userName={admin_data.name || "Admin"} userRole="Administrator" />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/service-requests" element={<ServiceRequests />} />
+            <Route path="/service-requests/:id" element={<ServiceRequestDetail />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -191,10 +191,10 @@ function ProductDetail() {
                 <span className="product-detail__meta-label">Collection</span>
                 <p className="product-detail__meta-val">{product.collection || "SAREE"}</p>
               </div>
-              <div>
+              {/* <div>
                 <span className="product-detail__meta-label">URL Slug</span>
                 <p className="product-detail__meta-val">{product.slug || `product-${product.id}`}</p>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -214,6 +214,8 @@ function ProductDetail() {
                       <th>Fabric / Material</th>
                       <th>Work / Details</th>
                       <th>Size / Weight</th>
+                      <th>Price</th>
+                      <th>Offer Price</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -231,6 +233,8 @@ function ProductDetail() {
                         <td>{variant.fabric || variant.metal || "—"}</td>
                         <td>{variant.work || variant.stone || variant.occasion || "—"}</td>
                         <td>{variant.size || variant.weight || variant.purity || "—"}</td>
+                        <td>{variant.price || "—"}</td>
+                        <td>{variant.offerPrice || "—"}</td>
                       </tr>
                     ))}
                   </tbody>

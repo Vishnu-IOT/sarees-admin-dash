@@ -230,12 +230,12 @@
   font-weight: 700;
 }
 
-.inventory__status--in-stock {
+.inventory__status--active {
   background: var(--color-success-bg);
   color: var(--color-success-text);
 }
 
-.inventory__status--low-stock {
+.inventory__status--inactive {
   background: var(--color-warning-bg);
   color: var(--color-warning-text);
 }

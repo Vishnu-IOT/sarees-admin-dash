@@ -31,6 +31,7 @@ function Login() {
       const token = res.token || res.accessToken || res.data?.token || res.success;
       if (token) {
         localStorage.setItem("authToken", token);
+        localStorage.setItem("admin_data",JSON.stringify(res.data));
       }
       navigate("/dashboard");
     } catch (err) {

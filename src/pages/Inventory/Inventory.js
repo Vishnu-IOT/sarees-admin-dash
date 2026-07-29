@@ -18,7 +18,7 @@ function Inventory() {
   const { products, pageProducts, productsCollection, productsLoading, removeProduct, fetchProducts } = useData();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 4;
+  const limit = 10;
 
   useEffect(() => {
     fetchProducts(currentPage, limit, productsCollection);
@@ -58,7 +58,7 @@ function Inventory() {
           </p>
         </div>
         <div className="inventory__header-actions">
-          <button className="inventory__btn inventory__btn--outline">↓ Export CSV</button>
+          {/* <button className="inventory__btn inventory__btn--outline">↓ Export CSV</button> */}
           <button
             className="inventory__btn inventory__btn--primary"
             onClick={() => navigate("/inventory/new")}
@@ -207,7 +207,7 @@ function Inventory() {
             disabled={currentPage === 1}
             onClick={() => goToPage(currentPage - 1)}
           >
-            Previous
+            🠔
           </button>
 
           {(() => {
@@ -269,7 +269,7 @@ function Inventory() {
             disabled={currentPage === pageProducts.totalPages}
             onClick={() => goToPage(currentPage + 1)}
           >
-            Next
+            ➝
           </button>
         </div>
       )}

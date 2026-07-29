@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useData } from "../../context/DataContext";
 import AddToLoomModal from "./AddToLoomModal";
 import "./Looms.css";
 
 function Looms() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { looms, loomsLoading, removeLoom } = useData();
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -31,9 +31,9 @@ function Looms() {
           <p className="looms__subtitle">Exquisite handloom sarees & artisan weaver products crafted directly at master looms.</p>
         </div>
         <div className="looms__header-actions">
-          <button className="looms__btn-outline" onClick={() => navigate("/inventory/new")}>
+          {/* <button className="looms__btn-outline" onClick={() => navigate("/inventory/new")}>
             + Create New Product
-          </button>
+          </button> */}
           <button className="looms__btn-primary" onClick={() => setShowAddModal(true)}>
             + Add to Loom
           </button>
@@ -53,10 +53,6 @@ function Looms() {
               {looms.length ? Math.round((activeCount / looms.length) * 100) : 0}%
             </span>
           </span>
-        </div>
-        <div className="looms__stat-card">
-          <span className="looms__stat-label">Artisan Weaver Line</span>
-          <span className="looms__stat-value looms__stat-value--info">Handloom Heritage</span>
         </div>
       </div>
 
@@ -106,7 +102,7 @@ function Looms() {
                   </td>
                   <td>
                     <div className="looms__actions">
-                      <button
+                      {/* <button
                         className="looms__icon-btn"
                         aria-label="View Details"
                         title="View Details"
@@ -121,14 +117,14 @@ function Looms() {
                         onClick={() => navigate(`/inventory/edit/${loom.id}`)}
                       >
                         ✏️
-                      </button>
+                      </button> */}
                       <button
-                        className="looms__icon-btn"
+                        className="looms__btn-primary-remove"
                         aria-label="Remove from Loom"
                         title="Remove from Loom"
                         onClick={() => handleRemove(loom)}
                       >
-                        🗑️
+                        Remove from Loom
                       </button>
                     </div>
                   </td>

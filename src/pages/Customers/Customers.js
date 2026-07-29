@@ -120,14 +120,14 @@ function Customers() {
                 disabled={customersMeta.currentPage === 1}
                 onClick={() => goToPage(customersMeta.currentPage - 1)}
               >
-                Previous
+                🠔
               </button>
               <button
                 className="customers__page-btn"
                 disabled={customersMeta.currentPage === customersMeta.totalPages}
                 onClick={() => goToPage(customersMeta.currentPage + 1)}
               >
-                Next
+                ➝
               </button>
             </div>
           </div>

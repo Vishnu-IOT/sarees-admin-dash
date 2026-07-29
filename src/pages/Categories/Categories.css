@@ -92,8 +92,8 @@
 .categories__card-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
+  /* align-items: flex-start; */
+  /* gap: 10px; */
   margin-bottom: 12px;
 }
 
@@ -101,6 +101,10 @@
   font-size: 15px;
   font-weight: 700;
   margin: 0;
+}
+
+.categories__card-actions {
+  display: flex;
 }
 
 .categories__icon-btn {
@@ -206,16 +210,20 @@
   .categories__card {
     flex-direction: column;
   }
+
   .categories__card-image {
     width: 100%;
     height: 60px;
   }
+
   .categories__header-actions {
     width: 100%;
   }
+
   .categories__btn {
     flex: 1;
   }
+
   .categories__summary {
     grid-template-columns: 1fr;
   }
